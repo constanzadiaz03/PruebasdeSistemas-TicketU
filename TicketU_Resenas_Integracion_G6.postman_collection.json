@@ -1,0 +1,2642 @@
+{
+  "info": {
+    "name": "TicketU - Reseñas - Pruebas de integracion (Grupo QA 6)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://pruebasdesistemauv.com/ticketu/api"
+    },
+    {
+      "key": "password",
+      "value": "Ticketu2026"
+    },
+    {
+      "key": "userBeto",
+      "value": "beto@ticketu.cl"
+    },
+    {
+      "key": "userAna",
+      "value": "ana@ticketu.cl"
+    },
+    {
+      "key": "userOrg",
+      "value": "cealumnos@ticketu.cl"
+    },
+    {
+      "key": "userOrg2",
+      "value": "deportes@ticketu.cl"
+    },
+    {
+      "key": "eventIdMultiple",
+      "value": ""
+    },
+    {
+      "key": "eventIdFiesta",
+      "value": ""
+    },
+    {
+      "key": "eventIdCancelado2",
+      "value": ""
+    },
+    {
+      "key": "mbId",
+      "value": ""
+    },
+    {
+      "key": "maId",
+      "value": ""
+    },
+    {
+      "key": "eventIdCancelado",
+      "value": ""
+    },
+    {
+      "key": "crId",
+      "value": ""
+    },
+    {
+      "key": "c501",
+      "value": ""
+    },
+    {
+      "key": "c500",
+      "value": ""
+    },
+    {
+      "key": "eventIdTerminado",
+      "value": ""
+    },
+    {
+      "key": "eventIdFuturo",
+      "value": ""
+    },
+    {
+      "key": "eventIdPendiente",
+      "value": ""
+    },
+    {
+      "key": "reviewIdPrevia",
+      "value": ""
+    },
+    {
+      "key": "reviewId",
+      "value": ""
+    },
+    {
+      "key": "marca",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "00 Preparacion (datos y sesiones)",
+      "item": [
+        {
+          "name": "S-01 Reseñas, Auth y Catalogo responden",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/health"
+          }
+        },
+        {
+          "name": "S-02 Login beto (asistio)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const t = pm.response.json().token;",
+                  "pm.test(\"Auth entrega token\", () => pm.expect(t).to.be.a(\"string\"));",
+                  "pm.collectionVariables.set(\"tokenBeto\", t);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"{{userBeto}}\", \"password\": \"{{password}}\"}"
+            }
+          }
+        },
+        {
+          "name": "S-03 Login ana (sin check-in)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const t = pm.response.json().token;",
+                  "pm.test(\"Auth entrega token\", () => pm.expect(t).to.be.a(\"string\"));",
+                  "pm.collectionVariables.set(\"tokenAna\", t);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"{{userAna}}\", \"password\": \"{{password}}\"}"
+            }
+          }
+        },
+        {
+          "name": "S-04 Eventos pendientes de beto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const l = L(pm.response.json()).map(x => EID(x) || x.id).filter(Boolean);",
+                  "pm.collectionVariables.set(\"eventIdPendiente\", l[0] || \"\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/pending"
+          }
+        },
+        {
+          "name": "S-05 Elegir evento terminado con asistencia de beto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const l = L(pm.response.json());",
+                  "let ev = pm.collectionVariables.get(\"eventIdPendiente\");",
+                  "if (!ev && l.length) ev = EID(l[0]);",
+                  "pm.collectionVariables.set(\"eventIdTerminado\", ev || \"\");",
+                  "const previa = l.find(x => EID(x) === ev);",
+                  "pm.collectionVariables.set(\"reviewIdPrevia\", previa ? RID(previa) : \"sin-resena-previa\");",
+                  "pm.test(\"Hay un evento terminado con asistencia de beto\", () => pm.expect(ev, \"No se encontro eventId: ver /reviews/mine y /reviews/pending\").to.be.ok);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/mine"
+          }
+        },
+        {
+          "name": "S-06 Liberar la reseña previa de beto (si existe)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 2xx o 404 (no existia)\", () => pm.expect([200,204,404]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{reviewIdPrevia}}"
+          }
+        },
+        {
+          "name": "S-07 Evento futuro desde Catalogo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const l = L(pm.response.json());",
+                  "const id = l.length ? (l[0].id || l[0]._id) : \"\";",
+                  "pm.collectionVariables.set(\"eventIdFuturo\", id);",
+                  "pm.test(\"Catalogo entrega al menos un evento\", () => pm.expect(id).to.be.ok);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/catalog/events?pageSize=5"
+          }
+        },
+        {
+          "name": "S-08 Login organizador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const t = pm.response.json().token;",
+                  "pm.test(\"Auth entrega token\", () => pm.expect(t).to.be.a(\"string\"));",
+                  "pm.collectionVariables.set(\"tokenOrg\", t);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"{{userOrg}}\", \"password\": \"{{password}}\"}"
+            }
+          }
+        },
+        {
+          "name": "S-09 Login segundo organizador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const t = pm.response.json().token;",
+                  "pm.test(\"Auth entrega token\", () => pm.expect(t).to.be.a(\"string\"));",
+                  "pm.collectionVariables.set(\"tokenOrg2\", t);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"{{userOrg2}}\", \"password\": \"{{password}}\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "I1 - Reseñas valida la asistencia registrada por Check-in",
+      "item": [
+        {
+          "name": "I1-01 Éxito: estudiante con check-in reseña un evento terminado",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.collectionVariables.set(\"marca\", \"G6-\" + Date.now());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 201\", () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.collectionVariables.set(\"reviewId\", RID(j) || (j.review && RID(j.review)) || \"\");",
+                  "pm.test(\"Guarda la calificacion enviada\", () => pm.expect(JSON.stringify(j)).to.include(\"4\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdTerminado}}\", \"rating\": 4, \"comment\": \"Prueba integracion {{marca}}\"}"
+            }
+          }
+        },
+        {
+          "name": "I1-02 Error: estudiante sin check-in no puede reseñar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"Mensaje de error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAna}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdTerminado}}\", \"rating\": 4, \"comment\": \"sin asistencia\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "I2 - Reseñas conoce el estado de los eventos (Organizador y Catalogo)",
+      "item": [
+        {
+          "name": "I2-01 Error: evento publicado que aun no termina se rechaza (422, no 404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Reseñas reconoce el evento: 422 o 403, nunca 404\", () => pm.expect([403,422]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdFuturo}}\", \"rating\": 4}"
+            }
+          }
+        },
+        {
+          "name": "I2-02 Error: evento inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"evt-no-existe-999\", \"rating\": 4}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "I3 - Listados de Reseñas reflejan la reseña creada",
+      "item": [
+        {
+          "name": "I3-01 Éxito: listado publico del evento incluye la reseña",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const txt = pm.response.text();",
+                  "pm.test(\"Incluye la reseña creada en I1-01\", () => pm.expect(txt).to.include(pm.collectionVariables.get(\"marca\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/events/{{eventIdTerminado}}"
+          }
+        },
+        {
+          "name": "I3-02 Éxito: 'mis reseñas' de beto incluye la reseña",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Incluye la reseña creada\", () => pm.expect(pm.response.text()).to.include(pm.collectionVariables.get(\"marca\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/mine"
+          }
+        },
+        {
+          "name": "I3-03 Éxito: el evento ya no esta entre los pendientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const ids = L(pm.response.json()).map(x => EID(x) || x.id);",
+                  "pm.test(\"El evento reseñado no figura como pendiente\", () => pm.expect(ids).to.not.include(pm.collectionVariables.get(\"eventIdTerminado\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/pending"
+          }
+        },
+        {
+          "name": "I3-04 Error: segunda reseña del mismo evento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 409\", () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdTerminado}}\", \"rating\": 5}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "I4 - Eliminar una reseña se refleja en los listados",
+      "item": [
+        {
+          "name": "I4-01 Error: otro usuario no puede eliminarla",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 403\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAna}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{reviewId}}"
+          }
+        },
+        {
+          "name": "I4-02 Éxito: el autor elimina su reseña",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200 o 204\", () => pm.expect([200,204]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{reviewId}}"
+          }
+        },
+        {
+          "name": "I4-03 Éxito: el listado del evento ya no la incluye",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"La reseña eliminada no aparece\", () => pm.expect(pm.response.text()).to.not.include(pm.collectionVariables.get(\"marca\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/events/{{eventIdTerminado}}"
+          }
+        },
+        {
+          "name": "I4-04 Error: eliminarla otra vez",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{reviewId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "I5 - Reseñas valida la sesion emitida por Auth",
+      "item": [
+        {
+          "name": "I5-01 Éxito: token de Auth aceptado por Reseñas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/mine"
+          }
+        },
+        {
+          "name": "I5-02 Error: sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"Mensaje comprensible, sin datos tecnicos\", () => { const m = pm.response.json().error.message; pm.expect(m).to.be.a(\"string\"); pm.expect(m).to.not.match(/stack|at .*\\.js|Exception/i); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/mine"
+          }
+        },
+        {
+          "name": "I5-03 Error: token adulterado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}x"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/mine"
+          }
+        }
+      ]
+    },
+    {
+      "name": "I6 - Catalogo y Reseñas comparten los mismos eventos",
+      "item": [
+        {
+          "name": "I6-01 Éxito: un evento del Catalogo es consultable en Reseñas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Responde sin error de evento\", () => pm.expect(pm.response.json()).to.not.have.property(\"error\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/events/{{eventIdFuturo}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "C - Casuistica individual de Reseñas (validaciones y permisos)",
+      "item": [
+        {
+          "name": "CR-00 [extra] Calificación -1 se rechaza",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\":\"{{eventIdTerminado}}\",\"rating\":-1}"
+            }
+          }
+        },
+        {
+          "name": "CR-01 [TestLink ext 3] Calificación 0 se rechaza",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\":\"{{eventIdTerminado}}\",\"rating\":0}"
+            }
+          }
+        },
+        {
+          "name": "CR-02 [TestLink ext 23] Calificación 6 se rechaza",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\":\"{{eventIdTerminado}}\",\"rating\":6}"
+            }
+          }
+        },
+        {
+          "name": "CR-03 [TestLink ext 24] Calificación texto 'cinco' se rechaza",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\":\"{{eventIdTerminado}}\",\"rating\":\"cinco\"}"
+            }
+          }
+        },
+        {
+          "name": "CR-04 [TestLink ext 24] Calificación decimal 3.5 se rechaza",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\":\"{{eventIdTerminado}}\",\"rating\":3.5}"
+            }
+          }
+        },
+        {
+          "name": "CR-05 [C-01] Reseña sin calificación",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\":\"{{eventIdTerminado}}\",\"comment\":\"sin nota\"}"
+            }
+          }
+        },
+        {
+          "name": "CR-06 [TestLink ext 11] Comentario de 501 caracteres se rechaza",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.collectionVariables.set(\"c501\", \"a\".repeat(501));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\":\"{{eventIdTerminado}}\",\"rating\":4,\"comment\":\"{{c501}}\"}"
+            }
+          }
+        },
+        {
+          "name": "CR-06b Limpieza: buscar reseña de beto en el evento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const l = L(pm.response.json());",
+                  "const p = l.find(x => EID(x) === pm.collectionVariables.get(\"eventIdTerminado\"));",
+                  "pm.collectionVariables.set(\"crId\", p ? RID(p) : \"sin-resena-previa\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/mine"
+          }
+        },
+        {
+          "name": "CR-06c Limpieza: eliminar la reseña si una validación la dejó pasar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 2xx o 404 (no había reseña)\", () => pm.expect([200,204,404]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{crId}}"
+          }
+        },
+        {
+          "name": "CR-07 [C-04] Comentario con lenguaje inapropiado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\":\"{{eventIdTerminado}}\",\"rating\":4,\"comment\":\"esto es una mierda de evento\"}"
+            }
+          }
+        },
+        {
+          "name": "CR-08 [C-05] Reseñar sin sesión",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\":\"{{eventIdTerminado}}\",\"rating\":4}"
+            }
+          }
+        },
+        {
+          "name": "CR-09a Buscar eventos cancelados en el Catalogo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "if (pm.response.code !== 200) { pm.test.skip(\"Listado de eventos (ruta o permisos no disponibles)\"); } else {",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const l = L(pm.response.json());",
+                  "const c = l.find(e => /cancel/i.test(String(e.status || e.state || \"\")) || e.cancelled === true || e.canceled === true);",
+                  "if (c && !pm.variables.get(\"eventIdCancelado\")) pm.collectionVariables.set(\"eventIdCancelado\", c.id || c._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/catalog/events?includePast=true&pageSize=100"
+          }
+        },
+        {
+          "name": "CR-09a2 Buscar eventos cancelados del organizador 1 (cealumnos)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "if (pm.response.code !== 200) { pm.test.skip(\"Listado de eventos (ruta o permisos no disponibles)\"); } else {",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const l = L(pm.response.json());",
+                  "const c = l.find(e => /cancel/i.test(String(e.status || e.state || \"\")) || e.cancelled === true || e.canceled === true);",
+                  "if (c && !pm.variables.get(\"eventIdCancelado\")) pm.collectionVariables.set(\"eventIdCancelado\", c.id || c._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenOrg}}"
+              }
+            ],
+            "url": "{{baseUrl}}/organizer/events"
+          }
+        },
+        {
+          "name": "CR-09a3 Buscar eventos cancelados del organizador 2 (deportes)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "if (pm.response.code !== 200) { pm.test.skip(\"Listado de eventos (ruta o permisos no disponibles)\"); } else {",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const l = L(pm.response.json());",
+                  "const c = l.find(e => /cancel/i.test(String(e.status || e.state || \"\")) || e.cancelled === true || e.canceled === true);",
+                  "if (c && !pm.variables.get(\"eventIdCancelado2\")) pm.collectionVariables.set(\"eventIdCancelado2\", c.id || c._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenOrg2}}"
+              }
+            ],
+            "url": "{{baseUrl}}/organizer/events"
+          }
+        },
+        {
+          "name": "CR-09 [C-03] Evento cancelado no se reseña (primer evento cancelado encontrado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "if (!pm.variables.get(\"eventIdCancelado\")) { pm.test.skip(\"Estado 422 (no se encontró un evento cancelado)\"); } else { pm.test(\"Estado 422\", () => pm.response.to.have.status(422)); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdCancelado}}\", \"rating\": 4}"
+            }
+          }
+        },
+        {
+          "name": "CR-09d [C-03] Evento cancelado no se reseña (evento cancelado del organizador 2)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "if (!pm.variables.get(\"eventIdCancelado2\")) { pm.test.skip(\"Estado 422 (no se encontró un evento cancelado del organizador 2)\"); } else { pm.test(\"Estado 422\", () => pm.response.to.have.status(422)); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdCancelado2}}\", \"rating\": 4}"
+            }
+          }
+        },
+        {
+          "name": "CR-20 [A-01] Reseña sin eventId se rechaza",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"rating\": 4}"
+            }
+          }
+        },
+        {
+          "name": "CR-09e [A-02] Evento cancelado y sin check-in a la vez: responde 422 (cancelado antes que asistencia)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "if (!pm.variables.get(\"eventIdCancelado\")) { pm.test.skip(\"Estado 422 (no se encontró un evento cancelado)\"); } else { pm.test(\"Estado 422\", () => pm.response.to.have.status(422)); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAna}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdCancelado}}\", \"rating\": 4}"
+            }
+          }
+        },
+        {
+          "name": "CR-21 [A-03] Organizador sin check-in no puede reseñar (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenOrg}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdTerminado}}\", \"rating\": 4}"
+            }
+          }
+        },
+        {
+          "name": "CR-22 [A-04] Pendientes sin sesión (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/pending"
+          }
+        },
+        {
+          "name": "CR-23 [A-05] Eliminar sin sesión (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/id-cualquiera"
+          }
+        },
+        {
+          "name": "CR-24 [A-06] Calificación null se rechaza",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Responde con el error del gateway\", () => pm.expect(pm.response.json()).to.have.nested.property(\"error.message\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\":\"{{eventIdTerminado}}\",\"rating\":null}"
+            }
+          }
+        },
+        {
+          "name": "CR-28 [A-08] JSON mal formado (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": "
+            }
+          }
+        },
+        {
+          "name": "CR-29 [A-09] La respuesta incluye x-request-id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Header x-request-id presente\", () => pm.expect(pm.response.headers.has(\"x-request-id\")).to.be.true);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/events/{{eventIdTerminado}}"
+          }
+        },
+        {
+          "name": "CR-09b Limpieza: buscar reseña de beto en el evento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const l = L(pm.response.json());",
+                  "const p = l.find(x => EID(x) === pm.collectionVariables.get(\"eventIdTerminado\"));",
+                  "pm.collectionVariables.set(\"crId\", p ? RID(p) : \"sin-resena-previa\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/mine"
+          }
+        },
+        {
+          "name": "CR-09c Limpieza: eliminar la reseña si una validación la dejó pasar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 2xx o 404 (no había reseña)\", () => pm.expect([200,204,404]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{crId}}"
+          }
+        },
+        {
+          "name": "CR-26 [A-07] Comentario vacío se acepta (el comentario es opcional)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 201\", () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.collectionVariables.set(\"crId\", RID(j) || (j.review && RID(j.review)) || \"\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdTerminado}}\", \"rating\": 3, \"comment\": \"\"}"
+            }
+          }
+        },
+        {
+          "name": "CR-27 Eliminar la reseña de CR-26",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200 o 204\", () => pm.expect([200,204]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{crId}}"
+          }
+        },
+        {
+          "name": "CR-10 [TestLink ext 4] Calificación 1 (valor mínimo) se acepta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 201\", () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.collectionVariables.set(\"crId\", RID(j) || (j.review && RID(j.review)) || \"\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdTerminado}}\", \"rating\": 1, \"comment\": \"limite inferior\"}"
+            }
+          }
+        },
+        {
+          "name": "CR-11 Eliminar la reseña de CR-10",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200 o 204\", () => pm.expect([200,204]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{crId}}"
+          }
+        },
+        {
+          "name": "CR-12 [TestLink ext 5] Calificación 5 (valor máximo) se acepta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 201\", () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.collectionVariables.set(\"crId\", RID(j) || (j.review && RID(j.review)) || \"\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdTerminado}}\", \"rating\": 5, \"comment\": \"limite superior\"}"
+            }
+          }
+        },
+        {
+          "name": "CR-13 Eliminar la reseña de CR-12",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200 o 204\", () => pm.expect([200,204]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{crId}}"
+          }
+        },
+        {
+          "name": "CR-14 [TestLink ext 6] Reseña sin descripción se acepta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 201\", () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.collectionVariables.set(\"crId\", RID(j) || (j.review && RID(j.review)) || \"\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdTerminado}}\", \"rating\": 3}"
+            }
+          }
+        },
+        {
+          "name": "CR-15 [TestLink ext 306 y 307] Resumen: promedio, distribución y orden",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const find = (o, re, d) => { d = d || 0; if (!o || typeof o !== \"object\" || d > 2) return undefined; for (const k of Object.keys(o)) { if (re.test(k) && o[k] !== undefined) return o[k]; } for (const k of Object.keys(o)) { if (o[k] && typeof o[k] === \"object\") { const r = find(o[k], re, d + 1); if (r !== undefined) return r; } } return undefined; };",
+                  "const j = pm.response.json();",
+                  "const cnt = find(j, /count|total|cantidad/i);",
+                  "pm.test(\"Incluye la cantidad de reseñas (al menos 1)\", () => { pm.expect(cnt).to.be.a(\"number\"); pm.expect(cnt).to.be.at.least(1); });",
+                  "const avg = find(j, /avg|average|promedio/i);",
+                  "pm.test(\"Promedio entre 1 y 5 con máximo 1 decimal\", () => { pm.expect(avg).to.be.a(\"number\"); pm.expect(avg).to.be.within(1, 5); pm.expect(Math.round(avg * 10) / 10).to.eql(avg); });",
+                  "pm.test(\"Incluye la distribución de 1 a 5 estrellas\", () => pm.expect(find(j, /distrib/i)).to.be.ok);",
+                  "const fechas = L(j.reviews ? j : (find(j, /^(reviews|items|data)$/i) ? { items: find(j, /^(reviews|items|data)$/i) } : j)).map(x => Date.parse(x.createdAt || x.created_at || x.date)).filter(n => !isNaN(n));",
+                  "pm.test(\"Reseñas de la más reciente a la más antigua\", () => pm.expect(fechas.every((d, i) => i === 0 || fechas[i - 1] >= d)).to.be.true);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/events/{{eventIdTerminado}}"
+          }
+        },
+        {
+          "name": "CR-16 [C-07] El organizador no puede eliminar una reseña",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 403\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenOrg}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{crId}}"
+          }
+        },
+        {
+          "name": "CR-16b [C-07] El segundo organizador tampoco puede eliminar una reseña",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 403\", () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenOrg2}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{crId}}"
+          }
+        },
+        {
+          "name": "CR-17 El autor elimina la reseña de CR-14 (404 si un organizador ya la eliminó)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200 o 204 (404 solo si CR-16 o CR-16b la eliminaron)\", () => pm.expect([200,204,404]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{crId}}"
+          }
+        },
+        {
+          "name": "CR-18 [C-02] Comentario de 500 caracteres (límite) se acepta",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.collectionVariables.set(\"c500\", \"a\".repeat(500));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 201\", () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.collectionVariables.set(\"crId\", RID(j) || (j.review && RID(j.review)) || \"\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdTerminado}}\", \"rating\": 5, \"comment\": \"{{c500}}\"}"
+            }
+          }
+        },
+        {
+          "name": "CR-19 Eliminar la reseña de CR-18",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "pm.test(\"Estado 200 o 204\", () => pm.expect([200,204]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{crId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "M2 - Evento con varias reseñas, solo lectura (Fiesta de generación 2026)",
+      "item": [
+        {
+          "name": "M2-00 Buscar el evento 'Fiesta de generación 2026' en el Catálogo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "const l = L(pm.response.json());",
+                  "const e = l.find(x => /fiesta de generaci/i.test(String(x.title || x.name || \"\")));",
+                  "if (e && !pm.variables.get(\"eventIdFiesta\")) pm.collectionVariables.set(\"eventIdFiesta\", e.id || e._id);",
+                  "if (!e && !pm.variables.get(\"eventIdFiesta\")) { pm.test.skip(\"Se encuentra el evento\"); } else { pm.test(\"Se encuentra el evento 'Fiesta de generación 2026'\", () => pm.expect(pm.variables.get(\"eventIdFiesta\")).to.be.ok); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/catalog/events?includePast=true&pageSize=100&q=Fiesta"
+          }
+        },
+        {
+          "name": "M2-01 [TestLink ext 306 y 307] Resumen consistente con las reseñas listadas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "const ID = pm.variables.get(\"eventIdFiesta\");",
+                  "if (!ID) { pm.test.skip(\"Evento 'Fiesta de generación 2026' no encontrado en el Catálogo\"); } else {",
+                  "const find = (o, re, d) => { d = d || 0; if (!o || typeof o !== \"object\" || d > 2) return undefined; for (const k of Object.keys(o)) { if (re.test(k) && o[k] !== undefined) return o[k]; } for (const k of Object.keys(o)) { if (o[k] && typeof o[k] === \"object\") { const r = find(o[k], re, d + 1); if (r !== undefined) return r; } } return undefined; };",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "const arr = Array.isArray(j.reviews) ? j.reviews : (find(j, /^(reviews|items|data)$/i) || []);",
+                  "const ratings = arr.map(x => x.rating).filter(n => typeof n === \"number\");",
+                  "const cnt = find(j, /count|total|cantidad/i);",
+                  "pm.test(\"Hay al menos 2 reseñas\", () => pm.expect(arr.length).to.be.at.least(2));",
+                  "pm.test(\"La cantidad informada coincide con las reseñas listadas\", () => pm.expect(cnt).to.eql(arr.length));",
+                  "pm.test(\"Ninguna reseña tiene nota fuera de 1 a 5\", () => pm.expect(ratings.every(r => Number.isInteger(r) && r >= 1 && r <= 5), \"notas: \" + JSON.stringify(ratings)).to.be.true);",
+                  "const avg = find(j, /avg|average|promedio/i);",
+                  "const media = ratings.reduce((a, b) => a + b, 0) / (ratings.length || 1);",
+                  "pm.test(\"El promedio es la media de las notas, con 1 decimal\", () => pm.expect(avg, \"media calculada: \" + media).to.eql(Math.round(media * 10) / 10));",
+                  "const dist = find(j, /distrib/i);",
+                  "pm.test(\"La distribución coincide con las notas listadas\", () => {",
+                  "  const m = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };",
+                  "  if (Array.isArray(dist)) { dist.forEach((x, i) => { if (typeof x === \"number\") { m[dist.length === 5 ? i + 1 : i] = x; } else { m[x.stars || x.star || x.rating || x.value || x._id] = x.count || x.total || 0; } }); }",
+                  "  else { Object.keys(dist || {}).forEach(k => { m[k] = typeof dist[k] === \"number\" ? dist[k] : (dist[k].count || 0); }); }",
+                  "  [1, 2, 3, 4, 5].forEach(st => pm.expect(m[st], \"estrellas \" + st).to.eql(ratings.filter(r => r === st).length));",
+                  "});",
+                  "const f = arr.map(x => Date.parse(x.createdAt || x.created_at || x.date)).filter(n => !isNaN(n));",
+                  "pm.test(\"Orden de la más reciente a la más antigua\", () => pm.expect(f.every((d, i) => i === 0 || f[i - 1] >= d)).to.be.true);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/events/{{eventIdFiesta}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "M - Reseñas multiples (HU-RES-02 y recalculo del promedio)",
+      "item": [
+        {
+          "name": "M-01 [TestLink ext 306] Beto reseña con nota 4",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "const NOEV = !pm.variables.get(\"eventIdMultiple\");",
+                  "if (NOEV) { pm.test.skip(\"Estado 201 (falta eventIdMultiple)\"); } else { pm.test(\"Estado 201\", () => pm.response.to.have.status(201)); const j = pm.response.json(); pm.collectionVariables.set(\"mbId\", RID(j) || (j.review && RID(j.review)) || \"\"); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdMultiple}}\", \"rating\": 4, \"comment\": \"Muy bueno\"}"
+            }
+          }
+        },
+        {
+          "name": "M-02 [TestLink ext 306] Ana reseña con nota 2 (la más reciente)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "const NOEV = !pm.variables.get(\"eventIdMultiple\");",
+                  "if (NOEV) { pm.test.skip(\"Estado 201 (falta eventIdMultiple)\"); } else { pm.test(\"Estado 201\", () => pm.response.to.have.status(201)); const j = pm.response.json(); pm.collectionVariables.set(\"maId\", RID(j) || (j.review && RID(j.review)) || \"\"); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAna}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"eventId\": \"{{eventIdMultiple}}\", \"rating\": 2, \"comment\": \"Regular\"}"
+            }
+          }
+        },
+        {
+          "name": "M-03 [TestLink ext 306 y 307] 2 reseñas: cantidad 2, promedio 3, distribución y orden",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "const NOEV = !pm.variables.get(\"eventIdMultiple\");",
+                  "if (NOEV) { pm.test.skip(\"Resumen (falta eventIdMultiple)\"); } else {",
+                  "const find = (o, re, d) => { d = d || 0; if (!o || typeof o !== \"object\" || d > 2) return undefined; for (const k of Object.keys(o)) { if (re.test(k) && o[k] !== undefined) return o[k]; } for (const k of Object.keys(o)) { if (o[k] && typeof o[k] === \"object\") { const r = find(o[k], re, d + 1); if (r !== undefined) return r; } } return undefined; };",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "const cnt = find(j, /count|total|cantidad/i);",
+                  "pm.test(\"Cantidad de reseñas = 2\", () => pm.expect(cnt).to.eql(2));",
+                  "const avg = find(j, /avg|average|promedio/i);",
+                  "pm.test(\"Promedio = 3\", () => pm.expect(avg).to.eql(3));",
+                  "const dist = find(j, /distrib/i);",
+                  "if (dist) { const vals = (Array.isArray(dist) ? dist : Object.values(dist)).map(x => typeof x === \"number\" ? x : (x.count || x.total || 0)); pm.test(\"La distribución suma la cantidad de reseñas\", () => pm.expect(vals.reduce((a, b) => a + b, 0)).to.eql(2)); }",
+                  "const arr = j.reviews || find(j, /^(reviews|items|data)$/i) || []; pm.test(\"La reseña más reciente va primero (nota 2)\", () => pm.expect(arr[0].rating).to.eql(2));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/events/{{eventIdMultiple}}"
+          }
+        },
+        {
+          "name": "M-04 Ana elimina su reseña",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "const NOEV = !pm.variables.get(\"eventIdMultiple\");",
+                  "if (NOEV) { pm.test.skip(\"Estado 200 o 204 (falta eventIdMultiple)\"); } else { pm.test(\"Estado 200 o 204\", () => pm.expect([200,204]).to.include(pm.response.code)); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAna}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{maId}}"
+          }
+        },
+        {
+          "name": "M-05 [D-08] Promedio recalculado tras eliminar: cantidad 1, promedio 4",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "const NOEV = !pm.variables.get(\"eventIdMultiple\");",
+                  "if (NOEV) { pm.test.skip(\"Resumen (falta eventIdMultiple)\"); } else {",
+                  "const find = (o, re, d) => { d = d || 0; if (!o || typeof o !== \"object\" || d > 2) return undefined; for (const k of Object.keys(o)) { if (re.test(k) && o[k] !== undefined) return o[k]; } for (const k of Object.keys(o)) { if (o[k] && typeof o[k] === \"object\") { const r = find(o[k], re, d + 1); if (r !== undefined) return r; } } return undefined; };",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "const cnt = find(j, /count|total|cantidad/i);",
+                  "pm.test(\"Cantidad de reseñas = 1\", () => pm.expect(cnt).to.eql(1));",
+                  "const avg = find(j, /avg|average|promedio/i);",
+                  "pm.test(\"Promedio = 4\", () => pm.expect(avg).to.eql(4));",
+                  "const dist = find(j, /distrib/i);",
+                  "if (dist) { const vals = (Array.isArray(dist) ? dist : Object.values(dist)).map(x => typeof x === \"number\" ? x : (x.count || x.total || 0)); pm.test(\"La distribución suma la cantidad de reseñas\", () => pm.expect(vals.reduce((a, b) => a + b, 0)).to.eql(1)); }",
+                  "",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/events/{{eventIdMultiple}}"
+          }
+        },
+        {
+          "name": "M-06 Beto elimina su reseña",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "const NOEV = !pm.variables.get(\"eventIdMultiple\");",
+                  "if (NOEV) { pm.test.skip(\"Estado 200 o 204 (falta eventIdMultiple)\"); } else { pm.test(\"Estado 200 o 204\", () => pm.expect([200,204]).to.include(pm.response.code)); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenBeto}}"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/reviews/{{mbId}}"
+          }
+        },
+        {
+          "name": "M-07 [HU-RES-02] Evento sin reseñas: cantidad 0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const L = j => Array.isArray(j) ? j : (j.items || j.reviews || j.events || j.data || []);",
+                  "const EID = x => x.eventId || x.event_id || (x.event && (x.event.id || x.event._id));",
+                  "const RID = x => x.id || x._id || x.reviewId;",
+                  "const NOEV = !pm.variables.get(\"eventIdMultiple\");",
+                  "if (NOEV) { pm.test.skip(\"Resumen (falta eventIdMultiple)\"); } else {",
+                  "const find = (o, re, d) => { d = d || 0; if (!o || typeof o !== \"object\" || d > 2) return undefined; for (const k of Object.keys(o)) { if (re.test(k) && o[k] !== undefined) return o[k]; } for (const k of Object.keys(o)) { if (o[k] && typeof o[k] === \"object\") { const r = find(o[k], re, d + 1); if (r !== undefined) return r; } } return undefined; };",
+                  "pm.test(\"Estado 200\", () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "const cnt = find(j, /count|total|cantidad/i);",
+                  "pm.test(\"Cantidad de reseñas = 0\", () => pm.expect(cnt).to.eql(0));",
+                  "const avg = find(j, /avg|average|promedio/i);",
+                  "pm.test(\"Sin reseñas: no hay promedio o es 0\", () => pm.expect(avg === undefined || avg === null || avg === 0).to.be.true);",
+                  "const dist = find(j, /distrib/i);",
+                  "if (dist) { const vals = (Array.isArray(dist) ? dist : Object.values(dist)).map(x => typeof x === \"number\" ? x : (x.count || x.total || 0)); pm.test(\"La distribución suma la cantidad de reseñas\", () => pm.expect(vals.reduce((a, b) => a + b, 0)).to.eql(0)); }",
+                  "",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/reviews/events/{{eventIdMultiple}}"
+          }
+        }
+      ]
+    }
+  ]
+}

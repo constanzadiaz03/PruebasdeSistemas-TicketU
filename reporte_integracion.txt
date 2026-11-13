@@ -1,0 +1,370 @@
+Fecha y hora de ejecucion: 12-11-2026 20:59:17,65 
+(node:19160) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+newman
+
+TicketU - Reseñas - Pruebas de integracion (Grupo QA 6)
+
+□ 00 Preparacion (datos y sesiones)
+└ S-01 Reseñas, Auth y Catalogo responden
+  GET https://pruebasdesistemauv.com/ticketu/api/health [200 OK, 523B, 107ms]
+  √  Estado 200
+
+└ S-02 Login beto (asistio)
+  POST https://pruebasdesistemauv.com/ticketu/api/auth/login [200 OK, 790B, 57ms]
+  √  Estado 200
+  √  Auth entrega token
+
+└ S-03 Login ana (sin check-in)
+  POST https://pruebasdesistemauv.com/ticketu/api/auth/login [200 OK, 785B, 47ms]
+  √  Estado 200
+  √  Auth entrega token
+
+└ S-04 Eventos pendientes de beto
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/pending [200 OK, 292B, 18ms]
+  √  Estado 200
+
+└ S-05 Elegir evento terminado con asistencia de beto
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/mine [200 OK, 1.41kB, 21ms]
+  √  Estado 200
+  √  Hay un evento terminado con asistencia de beto
+
+└ S-06 Liberar la reseña previa de beto (si existe)
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/d7453709-c571-4574-af25-1826ba1ac029 [200 OK, 308B, 19ms]
+  √  Estado 2xx o 404 (no existia)
+
+└ S-07 Evento futuro desde Catalogo
+  GET https://pruebasdesistemauv.com/ticketu/api/catalog/events?pageSize=5 [200 OK, 2.96kB, 18ms]
+  √  Estado 200
+  √  Catalogo entrega al menos un evento
+
+└ S-08 Login organizador
+  POST https://pruebasdesistemauv.com/ticketu/api/auth/login [200 OK, 811B, 41ms]
+  √  Estado 200
+  √  Auth entrega token
+
+└ S-09 Login segundo organizador
+  POST https://pruebasdesistemauv.com/ticketu/api/auth/login [200 OK, 806B, 40ms]
+  √  Estado 200
+  √  Auth entrega token
+
+□ I1 - Reseñas valida la asistencia registrada por Check-in
+└ I1-01 Éxito: estudiante con check-in reseña un evento terminado
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [201 Created, 706B, 17ms]
+  √  Estado 201
+  √  Guarda la calificacion enviada
+
+└ I1-02 Error: estudiante sin check-in no puede reseñar
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [403 Forbidden, 403B, 15ms]
+  √  Estado 403
+  √  Mensaje de error del gateway
+
+□ I2 - Reseñas conoce el estado de los eventos (Organizador y Catalogo)
+└ I2-01 Error: evento publicado que aun no termina se rechaza (422, no 404)
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [422 Unprocessable Entity, 406B, 16ms]
+  √  Reseñas reconoce el evento: 422 o 403, nunca 404
+
+└ I2-02 Error: evento inexistente
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [404 Not Found, 362B, 14ms]
+  √  Estado 404
+
+□ I3 - Listados de Reseñas reflejan la reseña creada
+└ I3-01 Éxito: listado publico del evento incluye la reseña
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/events/c47c4a17-60fc-4374-8cb6-2576b85c5017 [200 OK, 831B, 12ms]
+  √  Estado 200
+  √  Incluye la reseña creada en I1-01
+
+└ I3-02 Éxito: 'mis reseñas' de beto incluye la reseña
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/mine [200 OK, 1.42kB, 12ms]
+  √  Estado 200
+  √  Incluye la reseña creada
+
+└ I3-03 Éxito: el evento ya no esta entre los pendientes
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/pending [200 OK, 292B, 13ms]
+  √  Estado 200
+  √  El evento reseñado no figura como pendiente
+
+└ I3-04 Error: segunda reseña del mismo evento
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [409 Conflict, 382B, 15ms]
+  √  Estado 409
+
+□ I4 - Eliminar una reseña se refleja en los listados
+└ I4-01 Error: otro usuario no puede eliminarla
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/1c9c52c0-2b73-4971-bab7-a757f385e3e5 [403 Forbidden, 375B, 13ms]
+  √  Estado 403
+
+└ I4-02 Éxito: el autor elimina su reseña
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/1c9c52c0-2b73-4971-bab7-a757f385e3e5 [200 OK, 308B, 13ms]
+  √  Estado 200 o 204
+
+└ I4-03 Éxito: el listado del evento ya no la incluye
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/events/c47c4a17-60fc-4374-8cb6-2576b85c5017 [200 OK, 426B, 23ms]
+  √  Estado 200
+  √  La reseña eliminada no aparece
+
+└ I4-04 Error: eliminarla otra vez
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/1c9c52c0-2b73-4971-bab7-a757f385e3e5 [404 Not Found, 363B, 14ms]
+  √  Estado 404
+
+□ I5 - Reseñas valida la sesion emitida por Auth
+└ I5-01 Éxito: token de Auth aceptado por Reseñas
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/mine [200 OK, 1.06kB, 15ms]
+  √  Estado 200
+
+└ I5-02 Error: sin token
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/mine [401 Unauthorized, 362B, 12ms]
+  √  Estado 401
+  √  Mensaje comprensible, sin datos tecnicos
+
+└ I5-03 Error: token adulterado
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/mine [401 Unauthorized, 374B, 12ms]
+  √  Estado 401
+
+□ I6 - Catalogo y Reseñas comparten los mismos eventos
+└ I6-01 Éxito: un evento del Catalogo es consultable en Reseñas
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/events/79da6550-d80c-46ca-816f-1116a47147b9 [200 OK, 426B, 11ms]
+  √  Estado 200
+  √  Responde sin error de evento
+
+□ C - Casuistica individual de Reseñas (validaciones y permisos)
+└ CR-00 [extra] Calificación -1 se rechaza
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 426B, 12ms]
+  √  Estado 400
+  √  Responde con el error del gateway
+
+└ CR-01 [TestLink ext 3] Calificación 0 se rechaza
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 426B, 12ms]
+  √  Estado 400
+  √  Responde con el error del gateway
+
+└ CR-02 [TestLink ext 23] Calificación 6 se rechaza
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 426B, 15ms]
+  √  Estado 400
+  √  Responde con el error del gateway
+
+└ CR-03 [TestLink ext 24] Calificación texto 'cinco' se rechaza
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 426B, 15ms]
+  √  Estado 400
+  √  Responde con el error del gateway
+
+└ CR-04 [TestLink ext 24] Calificación decimal 3.5 se rechaza
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 426B, 15ms]
+  √  Estado 400
+  √  Responde con el error del gateway
+
+└ CR-05 [C-01] Reseña sin calificación
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 426B, 13ms]
+  √  Estado 400
+  √  Responde con el error del gateway
+
+└ CR-06 [TestLink ext 11] Comentario de 501 caracteres se rechaza
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 424B, 16ms]
+  √  Estado 400
+  √  Responde con el error del gateway
+
+└ CR-06b Limpieza: buscar reseña de beto en el evento
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/mine [200 OK, 1.06kB, 14ms]
+  √  Estado 200
+
+└ CR-06c Limpieza: eliminar la reseña si una validación la dejó pasar
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/sin-resena-previa [404 Not Found, 363B, 13ms]
+  √  Estado 2xx o 404 (no había reseña)
+
+└ CR-07 [C-04] Comentario con lenguaje inapropiado
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [201 Created, 699B, 16ms]
+  1. Estado 422
+  2. Responde con el error del gateway
+
+└ CR-08 [C-05] Reseñar sin sesión
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [401 Unauthorized, 362B, 14ms]
+  √  Estado 401
+  √  Responde con el error del gateway
+
+└ CR-09a Buscar eventos cancelados en el Catalogo
+  GET https://pruebasdesistemauv.com/ticketu/api/catalog/events?includePast=true&pageSize=100 [200 OK, 30.11kB, 15ms]
+  √  Estado 200
+
+└ CR-09a2 Buscar eventos cancelados del organizador 1 (cealumnos)
+  GET https://pruebasdesistemauv.com/ticketu/api/organizer/events [200 OK, 28.36kB, 15ms]
+  √  Estado 200
+
+└ CR-09a3 Buscar eventos cancelados del organizador 2 (deportes)
+  GET https://pruebasdesistemauv.com/ticketu/api/organizer/events [200 OK, 1.53kB, 14ms]
+  √  Estado 200
+
+└ CR-09 [C-03] Evento cancelado no se reseña (primer evento cancelado encontrado)
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [422 Unprocessable Entity, 397B, 14ms]
+  √  Estado 422
+
+└ CR-09d [C-03] Evento cancelado no se reseña (evento cancelado del organizador 2)
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [422 Unprocessable Entity, 397B, 13ms]
+  √  Estado 422
+
+└ CR-20 [A-01] Reseña sin eventId se rechaza
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 368B, 15ms]
+  √  Estado 400
+  √  Responde con el error del gateway
+
+└ CR-09e [A-02] Evento cancelado y sin check-in a la vez: responde 422 (cancelado antes que asistencia)
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [422 Unprocessable Entity, 397B, 15ms]
+  √  Estado 422
+
+└ CR-21 [A-03] Organizador sin check-in no puede reseñar (403)
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [403 Forbidden, 403B, 14ms]
+  √  Estado 403
+  √  Responde con el error del gateway
+
+└ CR-22 [A-04] Pendientes sin sesión (401)
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/pending [401 Unauthorized, 362B, 11ms]
+  √  Estado 401
+
+└ CR-23 [A-05] Eliminar sin sesión (401)
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/id-cualquiera [401 Unauthorized, 362B, 12ms]
+  √  Estado 401
+
+└ CR-24 [A-06] Calificación null se rechaza
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 426B, 14ms]
+  √  Estado 400
+  √  Responde con el error del gateway
+
+└ CR-28 [A-08] JSON mal formado (400)
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 360B, 14ms]
+  √  Estado 400
+
+└ CR-29 [A-09] La respuesta incluye x-request-id
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/events/c47c4a17-60fc-4374-8cb6-2576b85c5017 [200 OK, 824B, 12ms]
+  √  Header x-request-id presente
+
+└ CR-09b Limpieza: buscar reseña de beto en el evento
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/mine [200 OK, 1.41kB, 12ms]
+  √  Estado 200
+
+└ CR-09c Limpieza: eliminar la reseña si una validación la dejó pasar
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/ef25f0da-334a-47d1-9ca8-b4a9e958d437 [200 OK, 308B, 35ms]
+  √  Estado 2xx o 404 (no había reseña)
+
+└ CR-26 [A-07] Comentario vacío se acepta (el comentario es opcional)
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [201 Created, 671B, 14ms]
+  √  Estado 201
+
+└ CR-27 Eliminar la reseña de CR-26
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/19e87c08-9523-46ed-b830-09a8dc3d834c [200 OK, 308B, 11ms]
+  √  Estado 200 o 204
+
+└ CR-10 [TestLink ext 4] Calificación 1 (valor mínimo) se acepta
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [201 Created, 686B, 14ms]
+  √  Estado 201
+
+└ CR-11 Eliminar la reseña de CR-10
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/412faaed-d3f6-4e69-96f7-8ffd47f8a226 [200 OK, 308B, 13ms]
+  √  Estado 200 o 204
+
+└ CR-12 [TestLink ext 5] Calificación 5 (valor máximo) se acepta
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [201 Created, 686B, 16ms]
+  √  Estado 201
+
+└ CR-13 Eliminar la reseña de CR-12
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/aeffacfc-55cf-4864-8c71-3135199f8999 [200 OK, 308B, 14ms]
+  √  Estado 200 o 204
+
+└ CR-14 [TestLink ext 6] Reseña sin descripción se acepta
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [201 Created, 671B, 16ms]
+  √  Estado 201
+
+└ CR-15 [TestLink ext 306 y 307] Resumen: promedio, distribución y orden
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/events/c47c4a17-60fc-4374-8cb6-2576b85c5017 [200 OK, 796B, 13ms]
+  √  Estado 200
+  √  Incluye la cantidad de reseñas (al menos 1)
+  √  Promedio entre 1 y 5 con máximo 1 decimal
+  √  Incluye la distribución de 1 a 5 estrellas
+  √  Reseñas de la más reciente a la más antigua
+
+└ CR-16 [C-07] El organizador no puede eliminar una reseña
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/a0e17198-fd2c-44b1-9be9-abaf14f479aa [403 Forbidden, 375B, 12ms]
+  √  Estado 403
+
+└ CR-16b [C-07] El segundo organizador tampoco puede eliminar una reseña
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/a0e17198-fd2c-44b1-9be9-abaf14f479aa [403 Forbidden, 375B, 11ms]
+  √  Estado 403
+
+└ CR-17 El autor elimina la reseña de CR-14 (404 si un organizador ya la eliminó)
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/a0e17198-fd2c-44b1-9be9-abaf14f479aa [200 OK, 308B, 12ms]
+  √  Estado 200 o 204 (404 solo si CR-16 o CR-16b la eliminaron)
+
+└ CR-18 [C-02] Comentario de 500 caracteres (límite) se acepta
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [201 Created, 1.17kB, 15ms]
+  √  Estado 201
+
+└ CR-19 Eliminar la reseña de CR-18
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/679a2ab0-be75-42d7-92e4-a6a3ab72a632 [200 OK, 308B, 13ms]
+  √  Estado 200 o 204
+
+□ M2 - Evento con varias reseñas, solo lectura (Fiesta de generación 2026)
+└ M2-00 Buscar el evento 'Fiesta de generación 2026' en el Catálogo
+  GET https://pruebasdesistemauv.com/ticketu/api/catalog/events?includePast=true&pageSize=100&q=Fiesta [200 OK, 338B, 12ms]
+  -  [skipped] Se encuentra el evento
+
+└ M2-01 [TestLink ext 306 y 307] Resumen consistente con las reseñas listadas
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/events/ [404 Not Found, 360B, 12ms]
+  -  [skipped] Evento 'Fiesta de generación 2026' no encontrado en el Catálogo
+
+□ M - Reseñas multiples (HU-RES-02 y recalculo del promedio)
+└ M-01 [TestLink ext 306] Beto reseña con nota 4
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 368B, 14ms]
+  -  [skipped] Estado 201 (falta eventIdMultiple)
+
+└ M-02 [TestLink ext 306] Ana reseña con nota 2 (la más reciente)
+  POST https://pruebasdesistemauv.com/ticketu/api/reviews/reviews [400 Bad Request, 368B, 13ms]
+  -  [skipped] Estado 201 (falta eventIdMultiple)
+
+└ M-03 [TestLink ext 306 y 307] 2 reseñas: cantidad 2, promedio 3, distribución y orden
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/events/ [404 Not Found, 360B, 12ms]
+  -  [skipped] Resumen (falta eventIdMultiple)
+
+└ M-04 Ana elimina su reseña
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/ [404 Not Found, 360B, 13ms]
+  -  [skipped] Estado 200 o 204 (falta eventIdMultiple)
+
+└ M-05 [D-08] Promedio recalculado tras eliminar: cantidad 1, promedio 4
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/events/ [404 Not Found, 360B, 12ms]
+  -  [skipped] Resumen (falta eventIdMultiple)
+
+└ M-06 Beto elimina su reseña
+  DELETE https://pruebasdesistemauv.com/ticketu/api/reviews/reviews/ [404 Not Found, 360B, 12ms]
+  -  [skipped] Estado 200 o 204 (falta eventIdMultiple)
+
+└ M-07 [HU-RES-02] Evento sin reseñas: cantidad 0
+  GET https://pruebasdesistemauv.com/ticketu/api/reviews/events/ [404 Not Found, 360B, 11ms]
+  -  [skipped] Resumen (falta eventIdMultiple)
+
+┌─────────────────────────┬───────────────────┬───────────────────┐
+│                         │          executed │            failed │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│              iterations │                 1 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│                requests │                73 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│            test-scripts │                73 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│      prerequest-scripts │                 3 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│              assertions │               103 │                 2 │
+├─────────────────────────┴───────────────────┴───────────────────┤
+│ total run duration: 7.3s                                        │
+├─────────────────────────────────────────────────────────────────┤
+│ total data received: 76.02kB (approx)                           │
+├─────────────────────────────────────────────────────────────────┤
+│ average response time: 17ms [min: 11ms, max: 107ms, s.d.: 13ms] │
+└─────────────────────────────────────────────────────────────────┘
+
+[31m  # [39m[31m failure        [39m[31m detail                                                                                                                     [39m
+[90m    [39m[90m                [39m[90m                                                                                                                            [39m
+ 1.  AssertionError  Estado 422                                                                                                                 
+                     expected response to have status code 422 but got 201                                                                      
+                     at assertion:0 in test-script                                                                                              
+                     inside "C - Casuistica individual de Reseñas (validaciones y permisos) / CR-07 [C-04] Comentario con lenguaje inapropiado" 
+[90m    [39m[90m                [39m[90m                                                                                                                            [39m
+ 2.  AssertionError  Responde con el error del gateway                                                                                          
+                     expected { …(9) } to have nested property 'error.message'                                                                  
+                     at assertion:1 in test-script                                                                                              
+                     inside "C - Casuistica individual de Reseñas (validaciones y permisos) / CR-07 [C-04] Comentario con lenguaje inapropiado" 
