@@ -479,50 +479,44 @@ def on_test_stop(environment, **kwargs):
 # ============================================================
 
 if __name__ == "__main__":
+    import os
     import sys
     import subprocess
+    from datetime import datetime
 
     # Permitir ejecutar directamente: python locustfile.py [carga|estres|soak]
+    ESCENARIOS = {
+        # modo: (usuarios, spawn rate, duración)
+        "carga":  ("50",  "5",  "5m"),
+        "estres": ("100", "10", "3m"),
+        "soak":   ("30",  "3",  "30m"),
+    }
+
     if len(sys.argv) > 1:
         mode = sys.argv[1].lower()
 
-        if mode == "carga":
-            # Carga normal: 50 usuarios, spawn rate 5/s, duración 5 min
-            cmd = [
-                "locust", "-f", __file__,
-                "--headless",
-                "-u", "50",
-                "-r", "5",
-                "-t", "5m",
-                "--html", "locust-report-carga.html",
-                "--csv", "locust-carga"
-            ]
-        elif mode == "estres":
-            # Estrés: 100 usuarios, spawn rate 10/s, duración 3 min
-            cmd = [
-                "locust", "-f", __file__,
-                "--headless",
-                "-u", "100",
-                "-r", "10",
-                "-t", "3m",
-                "--html", "locust-report-estres.html",
-                "--csv", "locust-estres"
-            ]
-        elif mode == "soak":
-            # Soak test: 30 usuarios, 30 min
-            cmd = [
-                "locust", "-f", __file__,
-                "--headless",
-                "-u", "30",
-                "-r", "3",
-                "-t", "30m",
-                "--html", "locust-report-soak.html",
-                "--csv", "locust-soak"
-            ]
-        else:
+        if mode not in ESCENARIOS:
             print("Uso: python locustfile.py [carga|estres|soak]")
             sys.exit(1)
 
+        users, spawn_rate, duration = ESCENARIOS[mode]
+
+        # Carpeta: locust/<tipo>/<fecha-hora>/
+        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        output_dir = os.path.join("locust", mode, stamp)
+        os.makedirs(output_dir, exist_ok=True)
+
+        cmd = [
+            "locust", "-f", __file__,
+            "--headless",
+            "-u", users,
+            "-r", spawn_rate,
+            "-t", duration,
+            "--html", os.path.join(output_dir, f"reporte-{mode}.html"),
+            "--csv", os.path.join(output_dir, mode),   # prefijo de los CSV
+        ]
+
+        print(f"Reportes en: {output_dir}")
         print(f"Ejecutando: {' '.join(cmd)}")
         subprocess.run(cmd)
     else:
