@@ -1,3 +1,0 @@
-Method,Name,Error,Occurrences,First Seen,Last Seen
-POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""El evento ya comenzó, no se venden más entradas""}}')",6,2026-11-26T14:10:12Z,2026-11-26T14:11:31Z
-POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""Superas el máximo de 4 entradas por persona (ya tienes 4)""}}')",8,2026-11-26T14:10:20Z,2026-11-26T14:12:04Z
