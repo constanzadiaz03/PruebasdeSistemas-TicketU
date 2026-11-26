@@ -1,0 +1,3 @@
+# Dependencias para Locust (Pruebas No Funcionales)
+locust>=2.20.0
+requests>=2.31.0

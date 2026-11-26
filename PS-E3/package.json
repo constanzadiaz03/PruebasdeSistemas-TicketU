@@ -1,0 +1,26 @@
+{
+  "name": "ticketu-reviews-e2e",
+  "version": "1.0.0",
+  "description": "Pruebas E2E Playwright - Servicio 6 Reseñas - Entrega 3",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report",
+    "install:browsers": "playwright install",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "@types/node": "^22.5.0",
+    "eslint": "^9.10.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
