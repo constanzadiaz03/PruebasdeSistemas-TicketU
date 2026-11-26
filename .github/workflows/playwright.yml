@@ -21,18 +21,14 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: PS-E3/package-lock.json
 
       - name: Install dependencies
-        working-directory: ./PS-E3
         run: npm ci
 
       - name: Install Playwright browsers
-        working-directory: ./PS-E3
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
-        working-directory: ./PS-E3
         run: npm test
         env:
           BASE_URL: https://pruebasdesistemauv.com/ticketu
@@ -43,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: PS-E3/playwright-report/
+          path: playwright-report/
           retention-days: 7
 
       - name: Upload test results (JSON/JUnit)
@@ -51,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: PS-E3/test-results/
+          path: test-results/
           retention-days: 7
 
       - name: Comment PR with test summary
@@ -60,24 +56,27 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const path = 'PS-E3/test-results/results.json';
+            const path = 'test-results/results.json';
             if (fs.existsSync(path)) {
               const results = JSON.parse(fs.readFileSync(path, 'utf8'));
               const passed = results.suites.reduce((acc, suite) => acc + suite.specs.filter(s => s.ok).length, 0);
               const failed = results.suites.reduce((acc, suite) => acc + suite.specs.filter(s => !s.ok).length, 0);
               const total = passed + failed;
+              const rate = total > 0 ? ((passed / total) * 100).toFixed(1) : 0;
 
-              const body = `## 🧪 Playwright E2E Test Results
-              | Metric | Value |
-              |--------|-------|
-              | ✅ Passed | ${passed} |
-              | ❌ Failed | ${failed} |
-              | 📊 Total | ${total} |
-              | 📈 Pass Rate | ${total > 0 ? ((passed/total)*100).toFixed(1) : 0}% |
+              const body = [
+                '## Playwright E2E Test Results',
+                '| Metric | Value |',
+                '|--------|-------|',
+                `| Passed | ${passed} |`,
+                `| Failed | ${failed} |`,
+                `| Total | ${total} |`,
+                `| Pass Rate | ${rate}% |`,
+                '',
+                `[View Full Report](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`
+              ].join('\n');
 
-              [View Full Report](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
-
-              github.rest.issues.createComment({
+              await github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
