@@ -1,0 +1,7 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+POST,POST /tickets/orders,CatchResponseError('Create order failed: 0 - '),23,2026-11-26T14:01:33Z,2026-11-26T14:06:04Z
+POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""El evento ya comenzó, no se venden más entradas""}}')",3,2026-11-26T14:02:52Z,2026-11-26T14:03:02Z
+GET,GET /catalog/events/:id,CatchResponseError('Event detail failed: 0'),37,2026-11-26T14:01:32Z,2026-11-26T14:06:05Z
+GET,GET /catalog/events,CatchResponseError('Catalog failed: 0'),47,2026-11-26T14:01:33Z,2026-11-26T14:05:39Z
+POST,POST /auth/login,CatchResponseError('Login failed: 0 - '),20,2026-11-26T14:01:38Z,2026-11-26T14:01:48Z
+GET,GET /tickets/availability/:id,CatchResponseError('Availability failed: 0'),45,2026-11-26T14:01:32Z,2026-11-26T14:06:08Z
