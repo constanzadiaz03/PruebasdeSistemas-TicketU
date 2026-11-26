@@ -1,0 +1,5 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""Solo quedan 1 entradas disponibles""}}')",2,2026-11-26T22:32:18Z,2026-11-26T22:32:47Z
+POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""El evento ya comenzó, no se venden más entradas""}}')",10,2026-11-26T22:28:38Z,2026-11-26T22:33:06Z
+POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""Superas el máximo de 4 entradas por persona (ya tienes 4)""}}')",44,2026-11-26T22:28:28Z,2026-11-26T22:33:21Z
+POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""Entradas agotadas""}}')",19,2026-11-26T22:28:27Z,2026-11-26T22:33:18Z
