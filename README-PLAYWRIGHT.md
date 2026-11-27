@@ -170,12 +170,14 @@ BASE_URL=http://localhost:3000 npm test
 | ID | Descripción | Entrega 2 | Retest Entrega 3 | Acción Mantis |
 |----|-------------|-----------|------------------|---------------|
 | **D-06** | Rating 0 se aceptaba (201) | Resuelto | ✅ Confirmado 400 | **Cerrado** |
-| **D-07** | Evento no terminado | Descartado (422) | ✅ Confirmado 422 | **Cerrado** |
-| **D-08** | Promedio no se recalcula al eliminar | Por verificar | ✅ **Funciona** (count 3→2, avg 3.7→3.5) | **No reproducible / Cerrar** |
-| **D-09** | Lenguaje inapropiado se acepta (201) | Activo | ✅ **Confirmado 422** (test pasa) — Backend ya corrige | **No gestionar (ya corregido)** |
+| **D-07** | Evento no terminado | No reportado* | ✅ Confirmado 422 (comportamiento correcto) | **No reportar** (no es defecto) |
+| **D-08** | Promedio no se recalcula al eliminar | No reportado* | ✅ **Funciona** (count 3→2, avg 3.7→3.5) | **No reportar** (no es defecto) |
+| **D-09** | Lenguaje inapropiado se acepta (201) | No reportado* | ✅ **Backend ya corrige** (test pasa 422) | **No reportar** (ya corregido) |
 
 > **Evidencia D-09**: Test `02-negative-cases.spec.ts` Flujo 12 — `expect 422` **PASS** (backend ya valida y rechaza) — Confirmado retest 2026-11-26
 > **Evidencia D-08**: Test `03-manage-reviews.spec.ts` Flujo 13 — `count 3→2, avg 3.7→3.5` **PASS**
+>
+> * **D-07, D-08, D-09**: Nunca fueron reportados formalmente en Mantis (Entrega 2). Se detectaron durante pruebas pero no se crearon tickets. En Entrega 3 se verificaron y **no son defectos** (D-07/D-08 comportamiento correcto, D-09 ya corregido por backend).
 
 ### Defectos Nuevos (Entrega 3)
 | ID | Título | Severidad | Descripción |
@@ -190,8 +192,7 @@ BASE_URL=http://localhost:3000 npm test
 
 1. **TestLink**: Registrar los 16 flujos (20 tests) como casos de prueba en TestLink — ver `document/TestLink_Casos_Prueba_Entrega3.md`
 2. **Mantis**:
-   - D-09: **NO GESTIONAR** — ya corregido por backend (test confirma 422)
-   - D-08: Cambiar a **No reproducible** o **Cerrado**
+   - D-07, D-08, D-09: **NO REPORTAR** — nunca se crearon tickets en Entrega 2; verificación Entrega 3 confirma que no son defectos (D-07/D-08 correctos, D-09 ya corregido)
    - ND-01: Crear ticket — Performance: Login timeout bajo carga
    - ND-02: Crear ticket — Test Data: Usuario beto sin eventos pendientes
    - ND-03: Crear ticket — UI: Mensaje informativo falta en "Mis reseñas" vacío

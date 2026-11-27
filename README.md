@@ -206,9 +206,11 @@ POST /api/auth/login
 | ID             | Descripción                         | Entrega 2        | Retest Entrega 3                                                 | Acción Mantis                     |
 | -------------- | ------------------------------------ | ---------------- | ---------------------------------------------------------------- | ---------------------------------- |
 | **D-06** | Rating 0 se aceptaba (201)           | Resuelto         | ✅ Confirmado 400                                                | **Cerrado**                  |
-| **D-07** | Evento no terminado                  | Descartado (422) | ✅ Confirmado 422                                                | **Cerrado**                  |
-| **D-08** | Promedio no se recalcula al eliminar | Por verificar    | ✅ **Funciona** (count 3→2, avg 3.7→3.5)                 | **No reproducible / Cerrar** |
-| **D-09** | Lenguaje inapropiado se acepta (201) | Activo           | ✅ **Confirmado 422** (test pasa retest) — Backend ya corrige | **No gestionar (ya corregido)** |
+| **D-07** | Evento no terminado                  | No reportado*    | ✅ Confirmado 422 (comportamiento correcto)                     | **No reportar** (no es defecto) |
+| **D-08** | Promedio no se recalcula al eliminar | No reportado*    | ✅ **Funciona** (count 3→2, avg 3.7→3.5)                 | **No reportar** (no es defecto) |
+| **D-09** | Lenguaje inapropiado se acepta (201) | No reportado*    | ✅ **Backend ya corrige** (test pasa 422)                     | **No reportar** (ya corregido) |
+
+> * **D-07, D-08, D-09**: Nunca fueron reportados formalmente en Mantis (Entrega 2). Se detectaron durante pruebas pero no se crearon tickets. En Entrega 3 se verificaron y **no son defectos** (D-07/D-08 comportamiento correcto, D-09 ya corregido por backend).
 
 ### Defectos Nuevos (Entrega 3)
 
