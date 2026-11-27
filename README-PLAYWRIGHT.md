@@ -187,25 +187,3 @@ BASE_URL=http://localhost:3000 npm test
 | **ND-03** | Falta mensaje "Sin reseñas" en UI | Baja (Cosmético) | Sección "Mis reseñas" vacía sin data-testid ni mensaje informativo |
 
 ---
-
-## 📝 Notas para la Entrega
-
-1. **TestLink**: Registrar los 16 flujos (20 tests) como casos de prueba en TestLink — ver `document/TestLink_Casos_Prueba_Entrega3.md`
-2. **Mantis**:
-   - D-07, D-08, D-09: **NO REPORTAR** — nunca se crearon tickets en Entrega 2; verificación Entrega 3 confirma que no son defectos (D-07/D-08 correctos, D-09 ya corregido)
-   - ND-01: Crear ticket — Performance: Login timeout bajo carga
-   - ND-02: Crear ticket — Test Data: Usuario beto sin eventos pendientes
-   - ND-03: Crear ticket — UI: Mensaje informativo falta en "Mis reseñas" vacío
-3. **Evidencia**: Capturas de pantalla y videos en `test-results/` tras ejecución
-4. **Presentación**: Incluir demo de 2-3 flujos clave (crear reseña, caso negativo, eliminar)
-
----
-
-## 🤝 Contribuidores
-
-**Grupo QA 6** — Prueba de Sistemas (CIN 421 / INF 423) — Universidad de Valparaíso
-
-- Constanza Diaz (Líder QA)
-- [Integrante 2]
-- [Integrante 3]
-- [Integrante 4]
