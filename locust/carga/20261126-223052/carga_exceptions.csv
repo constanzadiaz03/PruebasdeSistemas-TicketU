@@ -1,0 +1,7 @@
+Count,Message,Traceback,Nodes
+20,Login failed,"  File ""C:\Users\const\AppData\Local\Programs\Python\Python313\Lib\site-packages\locust\user\users.py"", line 166, in run
+    self.on_start()
+    ~~~~~~~~~~~~~^^
+  File ""C:\Users\const\OneDrive - alumnos.uv.cl\PS-E2\locustfile.py"", line 248, in on_start
+    raise RescheduleTask(""Login failed"")
+",local

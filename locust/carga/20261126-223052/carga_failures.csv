@@ -1,0 +1,8 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""Superas el máximo de 4 entradas por persona (ya tienes 3)""}}')",1,2026-11-27T01:31:26Z,2026-11-27T01:31:26Z
+POST,POST /tickets/orders,CatchResponseError('Create order failed: 0 - '),1,2026-11-27T01:31:07Z,2026-11-27T01:31:07Z
+GET,GET /catalog/events/:id,CatchResponseError('Event detail failed: 0'),6,2026-11-27T01:31:07Z,2026-11-27T01:31:30Z
+GET,GET /catalog/events,CatchResponseError('Catalog failed: 0'),9,2026-11-27T01:31:05Z,2026-11-27T01:31:33Z
+POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""Superas el máximo de 4 entradas por persona (ya tienes 4)""}}')",4,2026-11-27T01:30:54Z,2026-11-27T01:31:29Z
+POST,POST /auth/login,CatchResponseError('Login failed: 0 - '),20,2026-11-27T01:31:07Z,2026-11-27T01:31:23Z
+GET,GET /tickets/availability/:id,CatchResponseError('Availability failed: 0'),4,2026-11-27T01:31:30Z,2026-11-27T01:31:33Z
