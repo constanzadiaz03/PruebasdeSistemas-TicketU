@@ -1,0 +1,9 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+POST,POST /tickets/orders,CatchResponseError('Create order failed: 0 - '),8,2026-11-27T01:43:08Z,2026-11-27T01:45:34Z
+POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""El evento ya comenzó, no se venden más entradas""}}')",1,2026-11-27T01:44:32Z,2026-11-27T01:44:32Z
+GET,GET /catalog/events/:id,CatchResponseError('Event detail failed: 0'),13,2026-11-27T01:43:05Z,2026-11-27T01:45:36Z
+GET,GET /catalog/events,CatchResponseError('Catalog failed: 0'),31,2026-11-27T01:43:06Z,2026-11-27T01:46:02Z
+POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""Superas el máximo de 4 entradas por persona (ya tienes 4)""}}')",26,2026-11-27T01:42:55Z,2026-11-27T01:46:03Z
+POST,POST /tickets/orders,"CatchResponseError('Create order failed: 409 - {""error"":{""code"":""CONFLICT"",""message"":""Entradas agotadas""}}')",1,2026-11-27T01:43:15Z,2026-11-27T01:43:15Z
+POST,POST /auth/login,CatchResponseError('Login failed: 0 - '),6,2026-11-27T01:43:08Z,2026-11-27T01:43:22Z
+GET,GET /tickets/availability/:id,CatchResponseError('Availability failed: 0'),19,2026-11-27T01:43:28Z,2026-11-27T01:46:04Z
