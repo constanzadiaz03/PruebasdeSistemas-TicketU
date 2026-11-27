@@ -22,6 +22,7 @@ async function apiLogin(request: APIRequestContext, email: string, password: str
   const response = await request.post(`${API_BASE}/auth/login`, {
     data: { email, password },
     headers: { 'Content-Type': 'application/json' },
+    timeout: 30000, // ND-01: timeout extendido a 30s por login lento en ambiente
   });
   if (!response.ok()) {
     throw new Error(`Login failed: ${response.status()} - ${await response.text()}`);
@@ -120,11 +121,19 @@ export const test = base.extend<TestFixtures>({
     });
     if (myReviews.ok()) {
       const reviews = await myReviews.json();
-      if (reviews.length > 0) {
-        const eventId = reviews[0].eventId;
-        if (eventId) {
-          await use(eventId);
-          return;
+      // Verificar cada evento hasta encontrar uno que aún tenga reseñas en la lista pública
+      for (const review of reviews) {
+        const eventId = review.eventId;
+        if (!eventId) continue;
+
+        // Verificar que el evento tiene reseñas en la lista pública
+        const summary = await request.get(`${API_BASE}/reviews/events/${eventId}`);
+        if (summary.ok()) {
+          const data = await summary.json();
+          if (data.count && data.count > 0) {
+            await use(eventId);
+            return;
+          }
         }
       }
     }

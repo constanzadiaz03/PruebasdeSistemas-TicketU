@@ -16,7 +16,7 @@ export default defineConfig({
     baseURL: 'https://pruebasdesistemauv.com/ticketu',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    video: 'on',
     actionTimeout: 15000,
     navigationTimeout: 30000,
   },
@@ -24,6 +24,12 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+    // Proyecto para tests con estado compartido (secuencial)
+    {
+      name: 'chromium-serial',
+      use: { ...devices['Desktop Chrome'] },
+      fullyParallel: false,
     },
     // Descomenta para probar en otros navegadores
     // {

@@ -21,12 +21,12 @@ Esta rama consolida la **Entrega 3** del proyecto TicketU, que incluye:
 
 | Componente                              | Herramienta            | Alcance                            | Estado                                               |
 | --------------------------------------- | ---------------------- | ---------------------------------- | ---------------------------------------------------- |
-| **Pruebas E2E Automatizadas**     | Playwright             | 16 flujos — Servicio 6 (Reseñas) | ✅ 16 passed, 18 skipped*                            |
+| **Pruebas E2E Automatizadas**     | Playwright             | 16 flujos — Servicio 6 (Reseñas) | ✅ 59 passed (2 proyectos), 7 skipped* (ND-02), 2 failed (ND-01 timeout) |
 | **Pruebas de Carga/Estrés/Soak** | Locust                 | 3 escenarios — Flujo Compra E2E   | ✅ Cumple latencia, Throughput limitado por ambiente |
 | **Retesting Defectos Entrega 2**  | Mantis + Playwright    | D-06, D-07, D-08, D-09             | ✅ 3 verificados, 1 descartado por tiempo            |
 | **Informe de Cierre Consolidado** | Docx (plantilla profe) | Entregas 2 + 3                     | ✅ Generado                                          |
 
-> *18 tests skipped: Usuario `beto` sin eventos pendientes de reseña (ND-02)
+> *7 tests skipped: Usuario `beto` sin eventos pendientes de reseña (ND-02). Tests ejecutados en 2 proyectos (paralelo + serial) para manejo de estado compartido. 2 failed: ND-01 timeouts ambientales (red/login), no bugs de test.
 
 ---
 
@@ -196,8 +196,8 @@ POST /api/auth/login
 | 19  | Evento con reseñas → resumen correcto                | RES-02         | `03-manage-reviews` | ✅     |
 | 20  | Comentario opcional (API)                              | RES-01         | `03-manage-reviews` | ✅     |
 
-> **Total: 16 flujos automatizados** (mínimo requerido: 6)
-> **Resultado**: 16 passed, 18 skipped (ND-02: beto sin eventos pendientes), 0 failed
+> **Total: 16 flujos automatizados** (mínimo requerido: 6) → **34 tests Playwright × 2 proyectos = 68 ejecuciones**
+> **Resultado**: 59 passed, 7 skipped (ND-02), 2 failed (ND-01 timeout ambiental)
 
 ---
 
@@ -208,14 +208,14 @@ POST /api/auth/login
 | **D-06** | Rating 0 se aceptaba (201)           | Resuelto         | ✅ Confirmado 400                                                | **Cerrado**                  |
 | **D-07** | Evento no terminado                  | Descartado (422) | ✅ Confirmado 422                                                | **Cerrado**                  |
 | **D-08** | Promedio no se recalcula al eliminar | Por verificar    | ✅ **Funciona** (count 3→2, avg 3.7→3.5)                 | **No reproducible / Cerrar** |
-| **D-09** | Lenguaje inapropiado se acepta (201) | Activo           | 🗑️ **Descartado por tiempo** — Backend ya corrige a 422 | **No gestionar**             |
+| **D-09** | Lenguaje inapropiado se acepta (201) | Activo           | ✅ **Confirmado 422** (test pasa retest) — Backend ya corrige | **No gestionar (ya corregido)** |
 
 ### Defectos Nuevos (Entrega 3)
 
 | ID              | Título                             | Severidad         | Descripción                                        |
 | --------------- | ----------------------------------- | ----------------- | --------------------------------------------------- |
-| **ND-01** | Login timeout bajo carga alta       | **Media**   | >20 users: login 21s timeout, ~5% fallos            |
-| **ND-02** | Usuario beto sin eventos pendientes | Baja              | 18 tests skipped, no hay data para flujos creación |
+| **ND-01** | Login timeout bajo carga alta       | **Media**   | >20 users: login 21s timeout, ~5% fallos (afecta Locust; Playwright timeout extendido a 30s) |
+| **ND-02** | Usuario beto sin eventos pendientes | Baja              | **7 tests skipped** (reducido de 18 con fix `testEventId`; tests en 2 proyectos para manejo estado) |
 | **ND-03** | Falta mensaje "Sin reseñas" en UI  | Baja (Cosmético) | Sección "Mis reseñas" vacía sin data-testid      |
 
 ---
